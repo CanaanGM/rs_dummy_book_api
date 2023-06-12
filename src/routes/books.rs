@@ -2,6 +2,12 @@ use rocket::response::status;
 use serde_json::{json, Value};
 
 use crate::auth::BasicAuth;
+use rocket_sync_db_pools::database;
+
+extern crate diesel;
+
+#[database("sqlite")]
+pub struct DbConn(diesel::SqliteConnection);
 
 #[catch(404)]
 pub fn book_not_found() -> Value {
@@ -9,7 +15,7 @@ pub fn book_not_found() -> Value {
 }
 
 #[get("/")]
-pub fn get_books(_auth: BasicAuth) -> Value {
+pub fn get_books(_auth: BasicAuth, _db: DbConn) -> Value {
     json!(
     [
         {"id":1, "name":"Horus Rising", "category":"science fiction"},
