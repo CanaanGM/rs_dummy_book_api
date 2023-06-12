@@ -19,27 +19,27 @@ pub fn get_books(_auth: BasicAuth) -> Value {
 }
 
 #[get("/<id>")]
-pub fn get_book_by_id(id: i32) -> Value {
+pub fn get_book_by_id(id: i32, _auth: BasicAuth) -> Value {
     json!(
         {"id":id, "name":"always the same id?", "category":"always has been"}
     )
 }
 
 #[post("/", format = "json")]
-pub fn create_book() -> Value {
+pub fn create_book(_auth: BasicAuth) -> Value {
     json!(
         {"id":3, "name":"Filgrim", "category":"science fiction"}
     )
 }
 
 #[put("/<id>", format = "json")]
-pub fn update_book(id: i32) -> Value {
+pub fn update_book(id: i32, _auth: BasicAuth) -> Value {
     json!(
         {"id":id, "name":"Updated", "category":"jokes on yee!"}
     )
 }
 
 #[delete("/<id>")]
-pub fn delete_book(id: i32) -> status::NoContent {
+pub fn delete_book(id: i32, _auth: BasicAuth) -> status::NoContent {
     status::NoContent
 }

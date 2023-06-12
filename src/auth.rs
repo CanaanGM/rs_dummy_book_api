@@ -6,6 +6,7 @@ pub struct BasicAuth {
     pub password: String,
 }
 
+/// naiive implementaion of auth but this is a dummy project
 impl BasicAuth {
     fn from_auth_headers(header: &str) -> Option<BasicAuth> {
         let split = header.split_whitespace().collect::<Vec<_>>();
