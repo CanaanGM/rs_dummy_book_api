@@ -12,7 +12,8 @@
 
 - installing `diesel` on windows is a pain in the rear if u don't have all the deps;
 
-
+- configuring the PORT in Rocket.toml didn't work yesterday, so i had to use the custom config programatically which when i added a DB screwed things over and wasted what remained of my sanity debugging it, today i just added the config and it worked . . . js all over again xD
+  - unclear docs are unclear tho
 
 ## Deps
 1. [diesel_cli](https://crates.io/crates/diesel_cli) 
