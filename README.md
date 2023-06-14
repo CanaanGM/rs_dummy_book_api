@@ -30,6 +30,7 @@ This is a basic app for practice and learning,
 - https://rocket.rs/v0.5-rc/
 - https://rocket.rs/v0.5-rc/guide/state/
 - https://diesel.rs/guides/getting-started
+- https://api.rocket.rs/master/rocket_db_pools/
 - [setup ](https://phoenixnap.com/kb/postgres-create-user) postgres user and tables
 - reddit is protesting so it's useless
 - [vault warden](https://github.com/dani-garcia/vaultwarden/blob/main/Cargo.toml) for reference
