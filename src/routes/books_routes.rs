@@ -19,6 +19,11 @@ pub fn book_not_found() -> Value {
     json!("Book Not Found . . . ")
 }
 
+#[catch(422)]
+pub fn incorrect_book_fields() -> Value {
+    json!("double check what u've provided . . . ")
+}
+
 #[get("/")]
 pub async fn get_books(_auth: BasicAuth, db: DbConn) -> Result<Value, Custom<Value>> {
     db.run(|connection| {

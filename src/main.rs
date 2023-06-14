@@ -6,7 +6,8 @@ use rocket::config::Config;
 use rocket::fairing::AdHoc;
 use rocket::{Build, Rocket};
 use routes::books_routes::{
-    book_not_found, create_book, delete_book, get_book_by_id, get_books, update_book, DbConn,
+    book_not_found, create_book, delete_book, get_book_by_id, get_books, incorrect_book_fields,
+    update_book, DbConn,
 };
 use routes::root::{handle_root, not_found};
 mod book_repo;
@@ -52,7 +53,7 @@ async fn main() {
                 create_book
             ],
         )
-        .register("/books", catchers![book_not_found]) // custom catcher
+        .register("/books", catchers![book_not_found, incorrect_book_fields]) // custom catcher
         .attach(DbConn::fairing()) // adding in the databse struct to rocket
         .attach(AdHoc::on_ignite("Diesel migrations", run_db_migrations))
         .launch()
