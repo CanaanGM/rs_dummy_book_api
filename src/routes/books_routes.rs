@@ -1,11 +1,10 @@
-use diesel::prelude::*;
 use rocket::{
     http::Status,
     response::status::{self, Custom},
 };
 use serde_json::{json, Value};
 
-use crate::{auth::BasicAuth, book_repo::BookRepo, models::Book, schema::books};
+use crate::{auth::BasicAuth, book_repo::BookRepo};
 use rocket_sync_db_pools::database;
 
 extern crate diesel;

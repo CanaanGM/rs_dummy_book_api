@@ -1,7 +1,6 @@
-
 CREATE TABLE books (
-    id Integer primary key autoincrement,
-    name varchar not null,
-    category varchar not null,
-    created_at Timestamp Not null default current_timestamp
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    name VARCHAR NOT NULL,
+    category VARCHAR NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 )

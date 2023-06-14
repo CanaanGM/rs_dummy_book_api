@@ -2,7 +2,7 @@
 
 diesel::table! {
     books (id) {
-        id -> Nullable<Integer>,
+        id -> Integer,
         name -> Text,
         category -> Text,
         created_at -> Timestamp,
