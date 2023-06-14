@@ -1,5 +1,6 @@
 # Dummy API to test rocket
 
+This is a basic app for practice and learning,  
 ### Exp thus far
 
 - docs are outdated, so looking for a way to customize the port took a while
