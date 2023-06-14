@@ -5,9 +5,11 @@ use crate::schema::books;
 
 #[derive(Deserialize, Serialize, Queryable, AsChangeset)]
 pub struct Book {
+    #[serde(skip_deserializing)]
     pub id: i32,
     pub name: String,
     pub category: String,
+    #[serde(skip_deserializing)]
     pub created_at: String,
 }
 

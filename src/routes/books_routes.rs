@@ -1,10 +1,12 @@
+use diesel::result::Error::NotFound;
+use rocket::serde::json::{json, Json, Value};
 use rocket::{
     http::Status,
     response::status::{self, Custom},
 };
-use serde_json::{json, Value};
 
-use crate::{auth::BasicAuth, book_repo::BookRepo};
+use crate::models::Book;
+use crate::{auth::BasicAuth, book_repo::BookRepo, models::NewBook};
 use rocket_sync_db_pools::database;
 
 extern crate diesel;
@@ -28,27 +30,57 @@ pub async fn get_books(_auth: BasicAuth, db: DbConn) -> Result<Value, Custom<Val
 }
 
 #[get("/<id>")]
-pub fn get_book_by_id(id: i32, _auth: BasicAuth) -> Value {
-    json!(
-        {"id":id, "name":"always the same id?", "category":"always has been"}
-    )
+pub async fn get_book_by_id(id: i32, _auth: BasicAuth, db: DbConn) -> Result<Value, Custom<Value>> {
+    db.run(move |conn| {
+        BookRepo::find_by_id(conn, id)
+            .map(|book| json!(book))
+            .map_err(|err| match err {
+                NotFound => Custom(Status::NotFound, json!(err.to_string())),
+                _ => Custom(Status::InternalServerError, json!(err.to_string())),
+            })
+    })
+    .await
 }
 
-#[post("/", format = "json")]
-pub fn create_book(_auth: BasicAuth) -> Value {
-    json!(
-        {"id":3, "name":"Filgrim", "category":"science fiction"}
-    )
+#[post("/", format = "json", data = "<new_book>")]
+pub async fn create_book(
+    _auth: BasicAuth,
+    db: DbConn,
+    new_book: Json<NewBook>,
+) -> Result<Value, Custom<Value>> {
+    db.run(|conn| {
+        BookRepo::create(conn, new_book.into_inner())
+            .map(|book| json!(book))
+            .map_err(|err| Custom(Status::InternalServerError, json!(err.to_string())))
+    })
+    .await
 }
 
-#[put("/<id>", format = "json")]
-pub fn update_book(id: i32, _auth: BasicAuth) -> Value {
-    json!(
-        {"id":id, "name":"Updated", "category":"jokes on yee!"}
-    )
+#[put("/<id>", format = "json", data = "<book>")]
+pub async fn update_book(
+    id: i32,
+    _auth: BasicAuth,
+    db: DbConn,
+    book: Json<Book>,
+) -> Result<Value, Custom<Value>> {
+    db.run(move |con| {
+        BookRepo::save(con, id, book.into_inner())
+            .map(|book| json!(book))
+            .map_err(|err| Custom(Status::InternalServerError, json!(err.to_string())))
+    })
+    .await
 }
 
 #[delete("/<id>")]
-pub fn delete_book(id: i32, _auth: BasicAuth) -> status::NoContent {
-    status::NoContent
+pub async fn delete_book(
+    id: i32,
+    _auth: BasicAuth,
+    db: DbConn,
+) -> Result<status::NoContent, Custom<Value>> {
+    db.run(move |conn| {
+        BookRepo::delete(conn, id)
+            .map(|_| status::NoContent)
+            .map_err(|err| Custom(Status::InternalServerError, json!(err.to_string())))
+    })
+    .await
 }
