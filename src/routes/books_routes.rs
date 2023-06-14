@@ -1,7 +1,11 @@
-use rocket::response::status;
+use diesel::prelude::*;
+use rocket::{
+    http::Status,
+    response::status::{self, Custom},
+};
 use serde_json::{json, Value};
 
-use crate::auth::BasicAuth;
+use crate::{auth::BasicAuth, book_repo::BookRepo, models::Book, schema::books};
 use rocket_sync_db_pools::database;
 
 extern crate diesel;
@@ -15,13 +19,13 @@ pub fn book_not_found() -> Value {
 }
 
 #[get("/")]
-pub fn get_books(_auth: BasicAuth, _db: DbConn) -> Value {
-    json!(
-    [
-        {"id":1, "name":"Horus Rising", "category":"science fiction"},
-        {"id":2, "name":"Designing data intensive applications", "category":"computer science"}
-        ]
-    )
+pub async fn get_books(_auth: BasicAuth, db: DbConn) -> Result<Value, Custom<Value>> {
+    db.run(|connection| {
+        BookRepo::find_multiple(connection, 50)
+            .map(|b| json!(b))
+            .map_err(|err| Custom(Status::InternalServerError, json!(err.to_string())))
+    })
+    .await
 }
 
 #[get("/<id>")]

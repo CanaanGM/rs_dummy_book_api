@@ -2,15 +2,16 @@
 extern crate rocket;
 mod auth;
 mod routes;
-use rocket::fairing::AdHoc;
-use rocket::{Rocket, Build};
-
 use rocket::config::Config;
-use routes::books::{
-    book_not_found, create_book, delete_book, get_book_by_id, get_books, update_book,DbConn
+use rocket::fairing::AdHoc;
+use rocket::{Build, Rocket};
+use routes::books_routes::{
+    book_not_found, create_book, delete_book, get_book_by_id, get_books, update_book, DbConn,
 };
 use routes::root::{handle_root, not_found};
-
+mod book_repo;
+mod models;
+mod schema;
 
 async fn run_db_migrations(rocket: Rocket<Build>) -> Rocket<Build> {
     use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
@@ -19,8 +20,10 @@ async fn run_db_migrations(rocket: Rocket<Build>) -> Rocket<Build> {
 
     DbConn::get_one(&rocket)
         .await
-        .expect("Unable to retrieve connection").run(|c| {
-            c.run_pending_migrations(MIGRATIONS).expect("Migrations failed");
+        .expect("Unable to retrieve connection")
+        .run(|c| {
+            c.run_pending_migrations(MIGRATIONS)
+                .expect("Migrations failed");
         })
         .await;
 
@@ -36,7 +39,7 @@ async fn main() {
         ..Config::default()
     };
 
-    let _ = rocket::build()//  custom(config)
+    let _ = rocket::build() //  custom(config)
         .mount("/", routes![handle_root])
         .register("/", catchers![not_found]) // default catcher
         .mount(
