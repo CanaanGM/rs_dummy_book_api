@@ -24,3 +24,13 @@ This is a basic app for practice and learning,
    - **List** all migrations for a specific db : `diesel migration list --database-url ./database.sqlite`
    - **Apply**, u need to run ***List*** again to check the proccess :`diesel migration run --database-url ./database.sqlite`
    - **Revert**, u need to run ***List*** again to check the proccess :`diesel migration revert --database-url ./database.sqlite`
+
+
+## docs used:
+- https://rocket.rs/v0.5-rc/
+- https://rocket.rs/v0.5-rc/guide/state/
+- https://diesel.rs/guides/getting-started
+- [setup ](https://phoenixnap.com/kb/postgres-create-user) postgres user and tables
+- reddit is protesting so it's useless
+- [vault warden](https://github.com/dani-garcia/vaultwarden/blob/main/Cargo.toml) for reference
+- [stackoverflow](https://stackoverflow.com/questions/49385326/how-do-i-fix-mismatching-dependencies-in-my-cargo-file-to-work-around-native-lib), not as much as i thought i would 
